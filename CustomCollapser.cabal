@@ -1,0 +1,68 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: a34957f3d5a73c350eaa87311be6d19a5d97071e6bf9690024763a3883ed4fe4
+
+name:           CustomCollapser
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/CustomCollapser#readme>
+homepage:       https://github.com/githubuser/CustomCollapser#readme
+bug-reports:    https://github.com/githubuser/CustomCollapser/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2018 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/CustomCollapser
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+                base >=4.7 && <5,
+                containers,
+                mtl,
+                parsec
+
+  exposed-modules:
+      Text.PrettyPrint.CustomCollapser
+  other-modules:
+      Paths_CustomCollapser
+  default-language: Haskell2010
+
+executable CustomCollapser-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+                CustomCollapser,
+                base >=4.7 && <5,
+                optparse-applicative
+
+  other-modules:
+      Paths_CustomCollapser
+  default-language: Haskell2010
+
+test-suite CustomCollapser-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      CustomCollapser
+    , base >=4.7 && <5
+  other-modules:
+      Paths_CustomCollapser
+  default-language: Haskell2010
