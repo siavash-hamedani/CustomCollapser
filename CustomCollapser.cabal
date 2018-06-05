@@ -6,12 +6,12 @@
 
 name:           CustomCollapser
 version:        0.1.0.0
-description:    Please see the README on GitHub at <https://github.com/githubuser/CustomCollapser#readme>
-homepage:       https://github.com/githubuser/CustomCollapser#readme
-bug-reports:    https://github.com/githubuser/CustomCollapser/issues
-author:         Author name here
-maintainer:     example@example.com
-copyright:      2018 Author name here
+description:    Please see the README on GitHub at <https://github.com/siavash-hamedani/CustomCollapser#readme>
+homepage:       https://github.com/siavash-hamedani/CustomCollapser#readme
+bug-reports:    https://github.com/siavash-hamedani/CustomCollapser/issues
+author:         Siavash Hamedani
+maintainer:     siavash@linuxmail.org
+copyright:      2018 Siavash Hamedani
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -23,7 +23,7 @@ extra-source-files:
 
 source-repository head
   type: git
-  location: https://github.com/githubuser/CustomCollapser
+  location: https://github.com/siavash-hamedani/CustomCollapser
 
 library
   hs-source-dirs:
