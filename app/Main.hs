@@ -5,6 +5,7 @@ import Text.PrettyPrint.CustomCollapser
 import Options.Applicative
 import Data.Semigroup ((<>))
 
+
 data CollapseOption = CollapseOption {
   expandables :: [Int],
   leftSymbol :: String,
@@ -12,6 +13,20 @@ data CollapseOption = CollapseOption {
   outLeftSymbol :: String,
   outRightSymbol :: String
   } deriving Show
+
+
+data Mode = Collapse CollapseOption | TakeOut Int CollapseOption deriving Show
+
+collapseModeOption :: Parser Mode
+collapseModeOption = Collapse <$> collapseOption
+
+takeOutModeOption :: Parser Mode
+takeOutModeOption = TakeOut <$> (option auto (long "TakeOutMode"
+                                 <> short 'T'
+                                 <> metavar "TARGET"
+                                 <> help "TakeOutMode") <|> pure 0)
+                    <*> collapseOption
+
 
 
 collapseOption :: Parser CollapseOption
@@ -40,11 +55,18 @@ collapseOption = CollapseOption
 
 main =
   let
-  opts = info (collapseOption <**> helper) (fullDesc)
+  opts = info ((collapseModeOption <|> takeOutModeOption) <**> helper) (fullDesc)
   in
     do
       inp <- execParser opts
       cont <- getContents
-      case runCollapse (leftSymbol inp) (rightSymbol inp) cont of
-        Left e -> print e
-        Right tf -> putStrLn $ collapseShow (outLeftSymbol inp) (outRightSymbol inp) (expandables inp) tf
+      case inp of
+        TakeOut tid colopts -> case runCollapse (leftSymbol colopts) (rightSymbol colopts) cont of
+            Left e -> print e
+            Right tf -> case takeCollapseOut tid tf of
+                          Nothing -> print $ "bad index "++ show tid
+                          Just inner -> putStrLn $ collapseShow True (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) inner
+        Collapse colopts ->
+          case runCollapse (leftSymbol colopts) (rightSymbol colopts) cont of
+            Left e -> print e
+            Right tf -> putStrLn $ collapseShow False (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) tf

@@ -4,6 +4,7 @@ import Text.Parsec
 import qualified Data.Map as DM
 import qualified Data.List as DL
 import qualified Control.Monad.State as ST
+import Data.Maybe
 
 
 data TextFold
@@ -12,15 +13,23 @@ data TextFold
   deriving Show
 
 
-collapseShow' lft rht mk (TF mid mbod) = case DM.lookup mid mk of
-  Nothing -> lft++(show mid)++rht
-  Just _ -> lft++ (DL.foldr (++) "" $ map (collapseShow' lft rht mk) mbod) ++rht
-collapseShow' lft rht mk (TN s)= s
+collapseShow' stt lft rht mk (TF mid mbod) = case DM.lookup mid mk  of
+  Nothing -> case stt of
+    False -> lft++(show mid)++rht
+    True -> dbmode
+  Just _ -> dbmode
+  where
+    dbmode = lft++ (DL.foldr (++) "" $ map (collapseShow' stt lft rht mk) mbod) ++rht
+collapseShow' stt lft rht mk (TN s)= s
 
-collapseShow :: String -> String
-  -> [Int] -- ^ list of the nodes you want expanded
+collapseShow :: Bool      -- ^ True : show all , False : use exapndable list
+  -> String -> String
+  -> [Int]                -- ^ list of the nodes you want expanded
   ->  TextFold ->  String
-collapseShow lft rht mk tf = collapseShow' lft rht (DM.fromList (zip mk (repeat ())))  tf
+collapseShow stt lft rht mk tf = collapseShow' stt lft rht (DM.fromList (zip mk (repeat ())))  tf
+
+
+
 
 untilMatching :: Int -> String -> String -> String -> ParsecT String () (ST.State Int) String
 untilMatching curi mres surs sure = do
@@ -64,3 +73,13 @@ runCollapse ::
 runCollapse lft rht cont = fst $ flip ST.runState 0 $ runParserT (parseCollapse lft rht) () "" cont
 
 
+
+
+takeCollapseOut :: Int -> TextFold -> Maybe TextFold
+takeCollapseOut mid x@(TN _) = Nothing
+takeCollapseOut mid x@(TF tid []) = Nothing
+takeCollapseOut mid x@(TF tid y) | mid == tid = Just x
+                                 | otherwise  = case DL.filter isJust $ DL.map (takeCollapseOut mid) y of
+                                     [Just j] -> Just j
+                                     [] -> Nothing
+                                     _ -> error "should not happend --- something wrong in indexing that multiple nodes found"
