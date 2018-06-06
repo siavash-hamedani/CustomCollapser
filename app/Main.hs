@@ -8,6 +8,7 @@ import Data.Semigroup ((<>))
 
 data CollapseOption = CollapseOption {
   expandables :: [Int],
+  hideables :: [Int],
   leftSymbol :: String,
   rightSymbol :: String,
   outLeftSymbol :: String,
@@ -35,6 +36,10 @@ collapseOption = CollapseOption
                                       <> short 'e'
                                       <> metavar "TARGET"
                                       <> help "expandables") <|> (pure [0]))
+                 <*> ((option (auto :: ReadM [Int])) (long "hideables"
+                                      <> short 'h'
+                                      <> metavar "TARGET"
+                                      <> help "expandables") <|> (pure []))
                  <*> (strOption (long "left"
                                       <> short 'l'
                                       <> metavar "TARGET"
@@ -65,8 +70,8 @@ main =
             Left e -> print e
             Right tf -> case takeCollapseOut tid tf of
                           Nothing -> print $ "bad index "++ show tid
-                          Just inner -> putStrLn $ collapseShow True (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) inner
+                          Just inner -> putStrLn $ collapseShow True (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) (hideables colopts) inner
         Collapse colopts ->
           case runCollapse (leftSymbol colopts) (rightSymbol colopts) cont of
             Left e -> print e
-            Right tf -> putStrLn $ collapseShow False (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) tf
+            Right tf -> putStrLn $ collapseShow False (outLeftSymbol colopts) (outRightSymbol colopts) (expandables colopts) (hideables colopts) tf

@@ -13,20 +13,23 @@ data TextFold
   deriving Show
 
 
-collapseShow' stt lft rht mk (TF mid mbod) = case DM.lookup mid mk  of
-  Nothing -> case stt of
-    False -> lft++(show mid)++rht
-    True -> dbmode
-  Just _ -> dbmode
-  where
-    dbmode = lft++ (DL.foldr (++) "" $ map (collapseShow' stt lft rht mk) mbod) ++rht
-collapseShow' stt lft rht mk (TN s)= s
+collapseShow' stt lft rht mk hd (TF mid mbod) = case DM.lookup mid hd of
+  Just j -> ""
+  Nothing -> case DM.lookup mid mk  of
+    Nothing -> case stt of
+      False -> lft++(show mid)++rht
+      True -> dbmode
+    Just _ -> dbmode
+    where
+      dbmode = lft++ (DL.foldr (++) "" $ map (collapseShow' stt lft rht mk hd) mbod) ++rht
+collapseShow' stt lft rht mk hd (TN s)= s
 
 collapseShow :: Bool      -- ^ True : show all , False : use exapndable list
   -> String -> String
   -> [Int]                -- ^ list of the nodes you want expanded
+  -> [Int]                -- ^ list of the nodes you want expanded
   ->  TextFold ->  String
-collapseShow stt lft rht mk tf = collapseShow' stt lft rht (DM.fromList (zip mk (repeat ())))  tf
+collapseShow stt lft rht mk hd tf = collapseShow' stt lft rht (DM.fromList (zip mk (repeat ()))) (DM.fromList (zip hd (repeat ()))) tf
 
 
 
