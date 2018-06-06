@@ -21,6 +21,8 @@ ___
 | -L String | outputs the text with new left identifier |
 | -R String | outputs the text with new right identifier |
 | -T Int    | Takeout mode , only prints the expandable with the given ID |
+| -h [Int]  | identifiers in this list will not be shown |
+
 
 # Collapser Mode
 
