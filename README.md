@@ -22,6 +22,7 @@ ___
 | -R String | outputs the text with new right identifier |
 | -T Int    | Takeout mode , only prints the expandable with the given ID |
 
+# Collapser Mode
 
 ```sh
 > echo "{{{HI . {{{see this by passing [0,1]}}}. no secret message here}}}" | CustomCollapser-exe -e []
@@ -38,7 +39,11 @@ ___
 
 > echo "{{{{{{no way {{{I let you read the message}}}}}} can {{{junk here}}} you {{{to distract you}}} even {{{from reading the message}}} read {{{wow it works}}} this ???}}}" | CustomCollapser-exe -e [0,3]
 {{{{{{1}}} can {{{junk here}}} you {{{4}}} even {{{5}}} read {{{6}}} this ???}}}
+```
 
+# TakeOut Mode
+
+```
 > echo "{{{H{{{inner}}}ello}}}" | CustomCollapser-exe -T 1
 {{{inner}}}
 
